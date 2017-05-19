@@ -7,6 +7,7 @@
 
 // Requiring our models
 var db = require("../models");
+var express = require('express');
 var apiRouter = express.Router();
 
 apiRouter.get('/user/:userId', function (req, res, next) {

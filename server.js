@@ -33,23 +33,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
-// REQUEST GET /auth/sign-in
-// Static directory
-app.use(express.static("./public"));
-
 // Routes =============================================================
 
 // 0 - AUTH MIDDLEWARE
-var auth = require("./routes/auth-routes.js");
-app.use('/auth', auth);
+app.use('/auth', require("./routes/auth-routes.js"));
 
 // 1 - API MIDDLEWARE
-var api = require("./routes/api-routes.js");
-app.use(jwtExp({ secret: gtGroupSecret }));
-app.use('/api', api);
+app.use('/api', jwtExp({ secret: gtGroupSecret }));
+app.use('/api', require("./routes/api-routes.js"));
 
 // 2 - HOME PAGE MIDDLEWARE
-app.use(jwtExp({
+// verify authorization via cookie using express-jwt
+app.get('/', jwtExp({
   secret: gtGroupSecret,
   getToken: function fromCookie(req) {
     if (req.signedCookies) {
@@ -58,8 +53,7 @@ app.use(jwtExp({
     return null;
   },
   credentialsRequired: false
-}));
-app.get('/', function (req, res, next) {
+}), function (req, res, next) {
   // if user is signed-in, next()
   if (req.user) {
     next();
@@ -67,29 +61,13 @@ app.get('/', function (req, res, next) {
     res.redirect('/auth/sign-in');
   }
 });
+app.use('/', require("./routes/user-routes.js"));
 
-// 3 - USER PAGES MIDDLEWARES
-var userPages = require("./routes/user-routes.js");
-// verify authorization via cookie using express-jwt
-app.use('/', jwtExp({
-  secret: gtGroupSecret,
-  getToken: function fromCookie(req) {
-    if (req.signedCookies) {
-      return req.signedCookies.jwtAuthToken;
-    }
-    return null;
-  }
-}));
-app.use('/', userPages);
-app.use('/', function (err, req, res, next) {
-  if (err.name === 'UnauthorizedError') {
-    res.redirect('/auth/sign-in');
-  }
-});
-
+// Static directory
+app.use(express.static("./public"));
 
 // Syncing our sequelize models and then starting our express app
-db.sequelize.sync({ }).then(function() {
+db.sequelize.sync({ force: true }).then(function() {
   app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
   });

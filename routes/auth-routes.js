@@ -63,7 +63,7 @@ authRouter.post("/sign-in", function(req, res, next) {
   })
     .then(function(user) {
       if (!user) {
-        console.log('no user found')
+        console.log('no user found');
         res.render('sign-in', { status: 'Username or password is incorrect' })
       } else {
         bcrypt.compare(req.body.password, user.password, function(err, valid) {

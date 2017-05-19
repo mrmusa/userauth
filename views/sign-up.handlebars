@@ -1,3 +1,13 @@
-SIGN-UP TODO: {{ status }}
+<h4>{{status}}</h4>
+<form action="/auth/sign-up" method="POST">
+    <div class="container">
+        <label><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username">
+        <label><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password">
 
-add FORM ACTION POST /auth/sign-up
+        <button type="submit">Register</button>
+
+        <a href="/auth/sign-in">Click here to sign-in</a>
+    </div>
+</form>
