@@ -1,5 +1,5 @@
 // *********************************************************************************
-// api-routes.js - this file offers a set of routes for displaying and saving data to the db
+// user-routes.js - this file offers a set of routes for displaying and saving data to the db
 // *********************************************************************************
 
 // Dependencies
@@ -7,18 +7,14 @@
 
 // Requiring our models
 var db = require("../models");
-var apiRouter = express.Router();
 
-apiRouter.get('/user/:userId', function (req, res, next) {
-  // find user in database
-  db.User.findOne({
-    id: req.params.userId
-  }).then(function (user) {
-    // respond
-    res.status(200).json(user);
-  }).catch(next);
+var express = require('express');
+var userRouter = express.Router();
+
+userRouter.get('/', function (req, res) {
+  res.render('profile', { user: req.user })
 });
 
 // Routes
 // =============================================================
-module.exports = apiRouter;
+module.exports = userRouter;

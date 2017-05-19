@@ -14,8 +14,11 @@
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.1",
     "chai": "^3.5.0",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
-    "jsonwebtoken": "^7.4.0",
+    "express-handlebars": "^3.0.0",
+    "express-jwt": "^5.3.0",
+    "jsonwebtoken": "^7.4.1",
     "mysql": "^2.13.0",
     "nightmare": "^2.10.0",
     "sequelize": "^3.30.4"
